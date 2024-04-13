@@ -1,0 +1,38 @@
+.container {
+  width: calc(100% / 7);
+  min-height: 120px;
+  border-left: 1px solid #ddd;
+
+
+  &:first-child {
+    border: none;
+  }
+
+}
+.active {
+  background-color: #ffba7f26;
+}
+.notCurrentMonth {
+  background-color: #d3d3d354;
+}
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+
+  &:hover {
+    .add {
+      opacity: 1;
+    }
+  }
+}
+
+.add {
+  border: 1px solid gray;
+  border-radius: 3px;
+  padding: 3px;
+  opacity: 0;
+  transition: opacity .5s;
+  cursor: pointer;
+}

@@ -1,0 +1,22 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #ddd;
+
+  &:first-child {
+    border: none;
+  }
+}
+
+.weekDay {
+  width: calc(100% / 7);
+  border-left: 1px solid #ddd;
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px 5px 0 0;
+  font-weight: 700;
+
+  &:first-child {
+    border: none;
+  }
+}

@@ -1,0 +1,29 @@
+.container {
+  font-size: 26px;
+  font-weight: 700;
+  text-transform: uppercase;
+  & span {
+    font-weight: 300;
+  }
+}
+.title {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.month {
+  border:  1px solid #ddd;
+}
+.navigation {
+  display: flex;
+  align-items: center;
+  gap:5px;
+  cursor: pointer;
+
+  button {
+    border: none;
+    background-color: inherit;
+    font-size: 18px;
+  }
+}
