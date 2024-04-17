@@ -49,6 +49,11 @@ class ModalStore {
     getModalDate(id: string): Date | null {
         return this.modals[id]?.date || null;
     }
+
+    setModalDate(id: string, date: Date): void {
+        this.modals[id].date = date
+    }
+
 }
 
 const modalStore = new ModalStore();

@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import styles from './Modal.module.scss';
+import {MdClose} from "react-icons/md";
 
 // Определение интерфейса для пропсов компонента Modal
 interface ModalProps {
@@ -16,7 +17,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     return (
         <div className={styles.overlay}>
             <div className={styles.modal}>
-                <button className={styles.closeButton} onClick={onClose}>X</button>
+                <MdClose className={styles.closeButton} onClick={onClose}/>
                 {children}
             </div>
         </div>

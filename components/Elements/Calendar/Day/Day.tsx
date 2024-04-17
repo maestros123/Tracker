@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './Day.module.scss'
 import moment, {Moment} from 'moment';
 import { MdAdd } from "react-icons/md";
 import {observer} from "mobx-react-lite";
 import modalStore from "@/stores/ModalStores";
+import {Task, taskStore} from "@/stores/TaskStores";
 
 
 interface DayProps {
@@ -29,12 +30,26 @@ const Day:React.FC<DayProps> = observer(({children, date, isCurrentMonth}) => {
     const containerClasses = `${styles.container} ${isToday(date) ? styles.active : ''} ${!isCurrentMonth ? styles.notCurrentMonth : ''}`;
 
 
+    const [tasks, setTasks] = useState<Task[]>([]);
+
+    useEffect(() => {
+        const loadTasks = async () => {
+            const fetchedTasks = await taskStore.getTasksByDate(date);
+            setTasks(fetchedTasks);
+        };
+        loadTasks();
+    }, [date]);
+
+
     return (
         <div className={containerClasses} >
             <div className={styles.navigation}>
                 <MdAdd className={styles.add} onClick={() => handleClick(date)}/>
                 {children}
             </div>
+            {tasks && tasks.map(item => (
+                <div className={styles.task} key={item.id}>{item.title}</div>
+            ))}
         </div>
     );
 });
