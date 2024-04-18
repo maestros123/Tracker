@@ -1,6 +1,6 @@
 import React from 'react';
 import Day from "@/components/Elements/Calendar/Day/Day";
-import styles from './Week.module.scss'
+import styles from './Month.module.scss'
 import {Moment} from "moment";
 
 
@@ -8,7 +8,7 @@ interface WeekProps {
     currentMonth: Moment;
 }
 
-const Week:React.FC<WeekProps> = ({ currentMonth }) => {
+const Month:React.FC<WeekProps> = ({ currentMonth }) => {
     // Названия дней недели
     const weekDays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
 
@@ -28,6 +28,7 @@ const Week:React.FC<WeekProps> = ({ currentMonth }) => {
         </div>
     );
 
+
     for (let week = startWeek; week <= endWeek; week++) {
         calendar.push(
             <div className={styles.container} key={week}>
@@ -46,4 +47,4 @@ const Week:React.FC<WeekProps> = ({ currentMonth }) => {
     );
 };
 
-export default Week;
+export default Month;
