@@ -1,21 +1,31 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import styles from "./page.module.scss";
 import Calendar from "@/components/Elements/Calendar/Calendar";
-import {Roboto} from 'next/font/google'
-import Tasks from "@/components/Layouts/Tasks";
+import Modal from "@/components/Elements/Modal/Modal";
+import modalStore from "@/stores/ModalStores";
+import AddTask from "@/features/tasks/components/AddTask/AddTask";
+import React from "react";
+import Sidebar from "@/components/Layouts/Sidebar/Sidebar";
+import { observer } from "mobx-react-lite";
 
+const Home = observer(() => {
+    const taskData = modalStore.getModalData('taskModal'); // Получаем данные задачи
 
-const roboto = Roboto({
-    weight: ['300', '400', '700'],
-    subsets: ['latin'],
-    display: 'swap',
-})
+    return (
+        <main>
+            <div className={styles.container}>
+                <Sidebar />
+                <Calendar />
+            </div>
+            <Modal
+                isOpen={modalStore.isModalOpen('taskModal')}
+                onClose={() => modalStore.closeModal('taskModal')}
+            >
+                <AddTask initialState={taskData} /> {/* Передаем данные как пропс */}
+            </Modal>
+        </main>
+    );
+});
 
-export default function Home() {
-  return (
-      <main className={roboto.className}>
-        <Tasks/>
-      </main>
-
-  );
-}
+export default Home;

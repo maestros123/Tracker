@@ -21,9 +21,9 @@ const Calendar:React.FC = memo(() => {
     }, []);
 
     return (
-        <div>
+        <div className={styles.container}>
             <div className={styles.title}>
-                <div className={styles.container}>{currentMonth.format('MMMM')} <span>{currentMonth.format('YYYY')}</span></div>
+                <div className={styles.wrapper}>{currentMonth.format('MMMM')} <span>{currentMonth.format('YYYY')}</span></div>
                 <div className={styles.navigation}>
                     <MdArrowBackIos onClick={handlePrevMonth} />
                     <button onClick={handleCurrentMonth}>Текущий</button>

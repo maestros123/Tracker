@@ -14,10 +14,11 @@ interface DayProps {
 }
 
 const Day: React.FC<DayProps> = (({children, date, isCurrentMonth}) => {
-    const openModal = (id: string, date: Date) => modalStore.openModal(id, date);
+
     const handleClick = useCallback(() => {
-        const d = date.toDate();
-        openModal('taskModal', d);
+        const momentDate = date.toDate();
+        const data: Partial<Task> = { date: momentDate };
+        modalStore.openModal('taskModal', data);
     }, [date]);
 
     // Функция для проверки, является ли переданная дата сегодняшним днем
@@ -33,9 +34,15 @@ const Day: React.FC<DayProps> = (({children, date, isCurrentMonth}) => {
 
     useEffect(() => {
         const disposer = reaction(
-            () => taskStore.tasks.filter(task => moment(task.date).isSame(date, 'day')).length,
-            // Решение выше реагирует только на изменения текущего дня и уменьшает рендеры
-            (tasksLength) => {
+            () => {
+                // Собираем информацию не только о количестве задач, но и о их заголовках
+                const tasksForDay = taskStore.tasks.filter(task => moment(task.date).isSame(date, 'day'));
+                return {
+                    count: tasksForDay.length,
+                    titles: tasksForDay.map(task => task.title).join(',')
+                };
+            },
+            (result) => {
                 const loadTasks = async () => {
                     const fetchedTasks = await taskStore.getTasksByDate(date);
                     setTasks(fetchedTasks);
@@ -50,18 +57,19 @@ const Day: React.FC<DayProps> = (({children, date, isCurrentMonth}) => {
     }, [date])
 
 
-    function handleClickTask(id: string) {
-        console.log(id)
+    function handleClickTask(item: Task) {
+        const data: Partial<Task> = {id:item.id, title: item.title, category: item.category, date: item.date };
+        modalStore.openModal('taskModal', data);
     }
 
     return (
         <div className={containerClasses}>
             <div className={styles.navigation}>
                 <MdAdd className={styles.add} onClick={() => handleClick()}/>
-                {children}
+                <div className={styles.number}>{children}</div>
             </div>
             {tasks && tasks.map(item => (
-                <div className={styles.task} key={item.id} onClick={() => handleClickTask(item.id)}>{item.title}</div>
+                <div className={styles.task} key={item.id} onClick={() => handleClickTask(item)}>{item.title}</div>
             ))}
         </div>
     );

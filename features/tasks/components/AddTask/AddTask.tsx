@@ -6,8 +6,7 @@ import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import Button from "@/components/Elements/ui/Button/Button";
 import SelectItem from "@/components/Elements/ui/SelectItem/SelectItem";
-import {Moment} from "moment";
-import {taskStore} from "@/stores/TaskStores";
+import {Task, taskStore} from "@/stores/TaskStores";
 
 interface OptionType {
     value: string;
@@ -28,17 +27,21 @@ interface StateType {
     taskTags: string;
 }
 
-const AddTask = observer(() => {
-    const initialDate: Date | Moment = modalStore.getModalDate('taskModal') || new Date();
+interface Props {
+    initialState?: Task | null;
+}
+
+const AddTask = observer(({ initialState }: Props) => {
+    const initialDate: Date = modalStore.getModalDate('taskModal') || new Date();
     const [state, setState] = useState<StateType>({
         date: initialDate,
         showCalendar: false,
-        selectedOptionCategory: { value: 'default', label: 'Выбрать категорию' },
-        selectedOptionStatus: { value: 'default', label: 'Статус задачи' },
+        selectedOptionCategory: { value: initialState?.category || 'default', label: initialState?.category || 'Выбрать категорию' },
+        selectedOptionStatus: { value: initialState?.status || 'default', label: initialState?.status || 'Статус задачи' },
         options: {
             category: [
-                { value: 'work', label: 'Работа' },
-                { value: 'personal', label: 'Личное' },
+                { value: 'Работа', label: 'Работа' },
+                { value: 'Личное', label: 'Личное' },
             ],
             status: [
                 { value: 'todo', label: 'Поставлена' },
@@ -46,13 +49,12 @@ const AddTask = observer(() => {
                 { value: 'done', label: 'Выполнена' },
             ]
         },
-        taskTitle: '',
-        taskDescription: '',
-        taskTags: ''
+        taskTitle: initialState?.title || '',
+        taskDescription: initialState?.description || '',
+        taskTags: initialState?.tags || ''
     });
 
     const handleDateChange = (newDate: Date) => {
-        modalStore.setModalDate('taskModal', newDate);
         setState(prev => ({...prev, date: newDate, showCalendar: false}));
     };
 
@@ -61,7 +63,7 @@ const AddTask = observer(() => {
     };
 
     function handleSave() {
-        const taskData = {
+        const taskData  = {
             title: state.taskTitle,
             description: state.taskDescription,
             date: state.date,
@@ -69,7 +71,16 @@ const AddTask = observer(() => {
             status: state.selectedOptionStatus.value,
             tags: state.taskTags
         };
-        taskStore.addTask(taskData);
+
+        if (initialState && initialState.id) {
+            // Обновляем существующую задачу
+            taskStore.updateTask(initialState.id, {...taskData, id: initialState.id});
+        } else {
+            // Создаем новую задачу
+            const newTask = {...taskData, id: Math.random().toString(36).substring(2, 9)};
+            taskStore.addTask(newTask);
+        }
+
         modalStore.closeModal('taskModal');
     }
 

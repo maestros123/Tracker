@@ -4,7 +4,7 @@ import moment, {Moment} from "moment";
 export interface Task {
     id: string;
     title: string;
-    date: Moment;
+    date: Date;
     description: string;
     category: string;
     tags: string;
@@ -20,7 +20,7 @@ class TaskStore {
 
     addTask(data: Task) {
         const newTask: Task = {
-            id: Math.random().toString(36).substr(2, 9),
+            id: data.id,
             title: data.title,
             description: data.description,
             date: data.date,
@@ -29,6 +29,13 @@ class TaskStore {
             tags: data.tags
         };
         this.tasks.push(newTask);
+    }
+
+    updateTask(taskId: string, data: Task) {
+        const index = this.tasks.findIndex(task => task.id === taskId);
+        if (index !== -1) {
+            this.tasks[index] = {...this.tasks[index], ...data};
+        }
     }
 
     getTasksByDate(date: Moment): Task[] {
