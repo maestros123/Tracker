@@ -5,6 +5,7 @@ import {MdAdd} from "react-icons/md";
 import modalStore from "@/stores/ModalStores";
 import {Task, taskStore} from "@/stores/TaskStores";
 import {reaction} from "mobx";
+import {EditTask} from "@/features/tasks/EditTask";
 
 
 interface DayProps {
@@ -34,33 +35,14 @@ const Day: React.FC<DayProps> = (({children, date, isCurrentMonth}) => {
 
     useEffect(() => {
         const disposer = reaction(
-            () => {
-                // Собираем информацию не только о количестве задач, но и о их заголовках
-                const tasksForDay = taskStore.tasks.filter(task => moment(task.date).isSame(date, 'day'));
-                return {
-                    count: tasksForDay.length,
-                    titles: tasksForDay.map(task => task.title).join(',')
-                };
-            },
-            (result) => {
-                const loadTasks = async () => {
-                    const fetchedTasks = await taskStore.getTasksByDate(date);
-                    setTasks(fetchedTasks);
-                };
-                loadTasks();
-            }
+            () => taskStore.tasks.filter(task => moment(task.date).isSame(date, 'day')),
+            fetchedTasks => setTasks(fetchedTasks),
+            { fireImmediately: true }
         );
 
-        return () => {
-            disposer();
-        };
-    }, [date])
+        return () => disposer();
+    }, [date]);
 
-
-    function handleClickTask(item: Task) {
-        const data: Partial<Task> = {id:item.id, title: item.title, category: item.category, date: item.date };
-        modalStore.openModal('taskModal', data);
-    }
 
     return (
         <div className={containerClasses}>
@@ -69,7 +51,7 @@ const Day: React.FC<DayProps> = (({children, date, isCurrentMonth}) => {
                 <div className={styles.number}>{children}</div>
             </div>
             {tasks && tasks.map(item => (
-                <div className={styles.task} key={item.id} onClick={() => handleClickTask(item)}>{item.title}</div>
+                <div className={styles.task} key={item.id} onClick={() => EditTask(item)}>{item.title}</div>
             ))}
         </div>
     );

@@ -4,6 +4,7 @@ import styles from './Calendar.module.scss';
 import moment from "moment";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import Month from "@/components/Elements/Calendar/Month/Month";
+import Title from "@/components/Elements/ui/Title/Title";
 
 const Calendar:React.FC = memo(() => {
     const [currentMonth, setCurrentMonth] = useState(moment());
@@ -23,7 +24,7 @@ const Calendar:React.FC = memo(() => {
     return (
         <div className={styles.container}>
             <div className={styles.title}>
-                <div className={styles.wrapper}>{currentMonth.format('MMMM')} <span>{currentMonth.format('YYYY')}</span></div>
+                <Title>{currentMonth.format('MMMM')} <span>{currentMonth.format('YYYY')}</span></Title>
                 <div className={styles.navigation}>
                     <MdArrowBackIos onClick={handlePrevMonth} />
                     <button onClick={handleCurrentMonth}>Текущий</button>

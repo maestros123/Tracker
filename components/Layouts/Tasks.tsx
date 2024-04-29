@@ -5,7 +5,7 @@ import Calendar from "@/components/Elements/Calendar/Calendar";
 import Modal from "@/components/Elements/Modal/Modal";
 import modalStore from "@/stores/ModalStores";
 import {observer} from "mobx-react-lite";
-import AddTask from "@/features/tasks/components/AddTask/AddTask";
+import Tasks from "@/features/tasks/components/Tasks/Tasks";
 import {taskStore} from "@/stores/TaskStores";
 
 const Tasks = observer(() => {
@@ -16,7 +16,7 @@ const Tasks = observer(() => {
                 isOpen={modalStore.isModalOpen('taskModal')}
                 onClose={() => modalStore.closeModal('taskModal')}
             >
-                <AddTask/>
+                <Tasks/>
             </Modal>
         </div>
     );

@@ -9,3 +9,18 @@
 *::after {
     box-sizing: border-box;
 }
+
+/*Links */
+
+a, a:link, a:visited  {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover  {
+    text-decoration: none;
+}
+
+main .react-calendar__tile--active {
+    background: #10b981;
+}

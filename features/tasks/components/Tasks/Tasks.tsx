@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import modalStore from "@/stores/ModalStores";
-import styles from './AddTask.module.scss';
+import styles from './Tasks.module.scss';
 import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import Button from "@/components/Elements/ui/Button/Button";
 import SelectItem from "@/components/Elements/ui/SelectItem/SelectItem";
 import {Task, taskStore} from "@/stores/TaskStores";
+import {AddTask} from "@/features/tasks/AddTask";
 
 interface OptionType {
     value: string;
     label: string;
 }
 
-interface StateType {
+export interface StateType {
+    id: string;
     date: Date;
     showCalendar: boolean;
     selectedOptionCategory: OptionType;
@@ -31,9 +33,10 @@ interface Props {
     initialState?: Task | null;
 }
 
-const AddTask = observer(({ initialState }: Props) => {
+const Tasks = observer(({ initialState }: Props) => {
     const initialDate: Date = modalStore.getModalDate('taskModal') || new Date();
     const [state, setState] = useState<StateType>({
+        id : initialState?.id || '',
         date: initialDate,
         showCalendar: false,
         selectedOptionCategory: { value: initialState?.category || 'default', label: initialState?.category || 'Выбрать категорию' },
@@ -62,27 +65,6 @@ const AddTask = observer(({ initialState }: Props) => {
         setState(prev => ({ ...prev, [field]: value }));
     };
 
-    function handleSave() {
-        const taskData  = {
-            title: state.taskTitle,
-            description: state.taskDescription,
-            date: state.date,
-            category: state.selectedOptionCategory.value,
-            status: state.selectedOptionStatus.value,
-            tags: state.taskTags
-        };
-
-        if (initialState && initialState.id) {
-            // Обновляем существующую задачу
-            taskStore.updateTask(initialState.id, {...taskData, id: initialState.id});
-        } else {
-            // Создаем новую задачу
-            const newTask = {...taskData, id: Math.random().toString(36).substring(2, 9)};
-            taskStore.addTask(newTask);
-        }
-
-        modalStore.closeModal('taskModal');
-    }
 
     return (
         <div className={styles.container}>
@@ -148,11 +130,11 @@ const AddTask = observer(({ initialState }: Props) => {
             </div>
 
             <div className={styles.wrapper}>
-                <Button onClick={handleSave}>Сохранить</Button>
+                <Button onClick={() => AddTask(state)}>Сохранить</Button>
             </div>
 
         </div>
     );
 });
 
-export default AddTask;
+export default Tasks;

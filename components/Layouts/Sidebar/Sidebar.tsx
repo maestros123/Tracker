@@ -1,15 +1,16 @@
 import React from 'react';
 import styles from './Sidebar.module.scss'
 import {MdCalendarMonth, MdCardGiftcard, MdMood, MdOutlineCalendarViewWeek, MdOutlineToday} from "react-icons/md";
+import Link from "next/link";
 
 const Sidebar = () => {
     return (
         <div className={styles.container}>
             <div className={styles.group}>
                 <h3 className={styles.title}>Задачи</h3>
-                <p><MdOutlineToday /> <span>Мой день</span></p>
+                <Link href="/myday"><MdOutlineToday /> <span>Мой день</span></Link>
                 <p><MdOutlineCalendarViewWeek /><span>Моя неделя</span></p>
-                <p><MdCalendarMonth /><span>Мой месяц</span></p>
+                <Link href="/month"><MdCalendarMonth /><span>Мой месяц</span></Link>
             </div>
 
             <div className={styles.group}>

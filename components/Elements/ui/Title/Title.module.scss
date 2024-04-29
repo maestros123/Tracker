@@ -1,0 +1,8 @@
+.container {
+  font-size: 26px;
+  font-weight: 700;
+  text-transform: uppercase;
+  & span {
+    font-weight: 300;
+  }
+}
